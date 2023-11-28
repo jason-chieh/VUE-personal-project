@@ -800,6 +800,7 @@ export default {
         //     allData=data ;
         //     this.allData1=allData;
         // })
+        
         .then(response => {
         // 將API回應轉換為JSON格式
         return response.json();
