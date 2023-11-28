@@ -8,12 +8,12 @@ export default {
           workName:"",
           workContent:"",
           headerWorkNum:0,
-          isChecked:false,
+          isChecked:0,
           finishWorkNum:0,
           workrate:0,
           key:"",
           dayKey:"",
-          arr:["星期一","星期二","星期三","星期四","星期五","星期六","星期日","這週"]
+          arr:["星期一","星期二","星期三","星期四","星期五","星期六","星期日","這週注意事項"]
         }
     },
     methods:{
@@ -34,31 +34,36 @@ export default {
           }
           this.workArr[dayKey].push(obj)
           this.page = 0 
-
           this.headerWorkNum++
+
         },
         finishWorkNumCal(){
           finishWorkNum++
         },
-        delWork(index){
-          this.workArr.splice(index, 1);
+        delWork(index,indexOut){
+          const checkbox1 = document.getElementById("checkbox1");
+          this.workArr[indexOut].splice(index, 1);
+          this.headerWorkNum--;
+          if(checkbox1.value){
+            this.finishWorkNum++;
+          }else{
+            this.finishWorkNum--;
+          }
+        },
+        num(){
+          const checkbox1 = document.getElementById("checkbox1");
+          if(checkbox1.value){
+            this.finishWorkNum++;
+          }else if(on){
+            this.finishWorkNum--;
+          }
         }
     },
     components:{
         RouterLink,
     },
-    // watch: {
-    // isChecked: function(value) {
-    //   // 當 checkbox 狀態改變時觸發
-    //   if (value) {
-    //     // 如果 checkbox 被打勾，將 count 變數+1
-    //     this.finishWorkNum++;
-    //   } else {
-    //     // 如果 checkbox 被取消勾選，將 count 變數-1
-    //     this.finishWorkNum--;
-    //   }
-    // }
-    // }
+    updated(){
+    },
 }
 </script>
 
@@ -70,8 +75,6 @@ export default {
         <div class="top">
             <i @click="goback" class="fa-solid fa-house-user"></i>
             <h1 @click="goschedule">週計劃表</h1>
-            <h1 >月計劃表</h1>
-            <h1>年計劃表</h1>
             
         </div>
         <div class="bot">
@@ -100,9 +103,9 @@ export default {
             <div class="day page" v-for="item,indexOut in arr">
                 <button @click="prepareAddWork(indexOut)" :key="indexOut" class="titleBtn" type="button">{{item}}</button>
                 <div class="workContent" v-for="item,index in workArr[indexOut]">
-                    <input type="checkbox">
+                    <input type="checkbox" id="checkbox1" @change="num" value="true"  :key="index">
                     <p>{{item.work}}</p>
-                    <button  type="button" @click="delWork(index)" :key="index">刪除</button>
+                    <button  type="button" @click="delWork(index,indexOut)" :key="index">刪除</button>
                     
                 </div>
             </div>
